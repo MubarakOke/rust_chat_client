@@ -43,9 +43,10 @@ fn main() {
         println!("Enter your Message");
         let mut msg= String::new();
         stdin().read_line(&mut msg).expect("unable to read input");
-        if msg==":quit" || tx.send(msg).is_err() {break}
+        if msg==":quit" || tx.send(msg).is_err() {break};
     }
 
+    println!("good bye")
 
 }
 
