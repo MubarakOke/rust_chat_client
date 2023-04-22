@@ -11,8 +11,9 @@ const LOCAL: &str= "127.0.0.1:7007";
 fn main() {
     println!("welcome");
     println!("connecting to server.........");
-    let mut client= TcpStream::connect(LOCAL).expect("unable to connect");
+    let mut client= TcpStream::connect(LOCAL).expect("unable to connect,\nserver probably not up");
     client.set_nonblocking(true).expect("unable to set non blocking");
+    println!("connected");
 
     let (tx , rx)= mpsc::channel::<String>();
 
@@ -26,11 +27,13 @@ fn main() {
                 Err(ref e) if e.kind() == ErrorKind::WouldBlock => {},
                 Err(_)=>{
                     println!("connection to server was severed");
+                    break;
                 }
             }
             match rx.try_recv() {
                 Ok(msg)=>{
-                    client.write_all(msg.as_bytes()).expect("unale to write message");
+                    client.write(msg.as_bytes()).expect("unable to write message
+                    ");
                 },
                 Err(TryRecvError::Empty)=> {},
                 Err(TryRecvError::Disconnected) => break,
@@ -40,14 +43,15 @@ fn main() {
     });
 
     loop{
-        println!("Enter your Message");
+        println!("Enter your Message: ");
         let mut msg= String::new();
         stdin().read_line(&mut msg).expect("unable to read input");
-        if msg==":quit" || tx.send(msg).is_err() {break};
+        let msg= msg.trim().to_string();
+        if msg==":quit"|| tx.send(msg).is_err() {break}
+        println!("message sent");
     }
 
     println!("good bye")
-
 }
 
 fn sleep_func(){
