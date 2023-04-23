@@ -47,8 +47,20 @@ fn main() {
         let mut msg= String::new();
         stdin().read_line(&mut msg).expect("unable to read input");
         let msg= msg.trim().to_string();
+<<<<<<< HEAD
         if msg==":quit"|| tx.send(msg).is_err() {break}
         println!("message sent");
+=======
+        if msg==":quit"{break}
+        match tx.send(msg) {
+            Ok(_)=> {println!("message sent")},
+            Err(e)=>{
+                println!("error sending message");
+                println!("{}", e);
+                break;
+            }
+        }
+>>>>>>> 5aa2608d6a6157c1291b5324f2753bde8c795672
     }
 
     println!("good bye")
