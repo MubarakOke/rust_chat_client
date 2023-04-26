@@ -50,7 +50,6 @@ fn main() {
         if msg==":quit"|| tx.send(msg).is_err() {break}
         println!("message sent");
     }
-
     println!("good bye")
 }
 
